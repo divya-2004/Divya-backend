@@ -16,18 +16,32 @@ public class PlayerServiceImp implements IPlayerService {
 	@Autowired
 	PlayerRepository repo;
 	
-	private Player mapDTOToEntity(PlayerDTO dto, Player player) {
-		if(player== null) {player=new Player();}
-		player.setPlayerId(dto.getPlayerId());
-		player.setPlayerName(dto.getPlayerName());
-		player.setJerseyNumber(dto.getJerseyNumber());
-		player.setRole(dto.getRole());
-		player.setTeamName(dto.getTeamName());
-		player.setTotalMatches(dto.getTotalMatches());
-		player.setState(dto.getState());
-		player.setDescription(dto.getDescription());
-		return player;
+	private Player mapDTOToEntity(PlayerDTO dto, Player player) throws InvalidRoleException  {
+	    if (player == null) {
+	        player = new Player();
+	    }
+	    player.setPlayerId(dto.getPlayerId());
+	    player.setPlayerName(dto.getPlayerName());
+	    player.setJerseyNumber(dto.getJerseyNumber());
+
+	    Player.Role roleEnum;
+	    try {
+	        roleEnum = Player.Role.valueOf(dto.getRole());
+	    } catch (IllegalArgumentException e) {
+	        throw new InvalidRoleException("Invalid role: " + dto.getRole());
+	    }
+	    player.setRole(roleEnum);
+
+	    player.setTeamName(dto.getTeamName());
+	    player.setTotalMatches(dto.getTotalMatches());
+	    player.setState(dto.getState());
+	    player.setDescription(dto.getDescription());
+
+	    return player;
 	}
+
+	
+	
 	@Override
 	public List<Player> getAllPlayers() {
 		
@@ -35,9 +49,15 @@ public class PlayerServiceImp implements IPlayerService {
 	}
 
 	@Override
-	public Player createPlayer(PlayerDTO dto) {
-		// TODO Auto-generated method stub
-		return repo.save(mapDTOToEntity(dto, null));
+	public Player createPlayer(PlayerDTO dto)   {
+	    Player player = new Player();
+		try {
+			player = mapDTOToEntity(dto, null);
+		} catch (InvalidRoleException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    return repo.save(player);
 	}
 
 	@Override
@@ -47,13 +67,19 @@ public class PlayerServiceImp implements IPlayerService {
 	}
 
 	@Override
-	public Player updatePlayer(int playerId, PlayerDTO dto) {
-		Player exist=repo.findById(playerId).orElse(null);
-		if(exist != null) {
-			return repo.save(mapDTOToEntity(dto, exist));
-		}
-		return null;
+	public Player updatePlayer(int playerId, PlayerDTO dto)   {
+	    Player exist = repo.findById(playerId).orElse(null);
+	    if(exist != null) {
+	        try {
+				return repo.save(mapDTOToEntity(dto, exist));
+			} catch (InvalidRoleException e) {
+				
+				e.printStackTrace();
+			}
+	    }
+	    return null;
 	}
+
 
 	@Override
 	public String deletePlayerById(int playerId) {

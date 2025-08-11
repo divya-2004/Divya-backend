@@ -1,8 +1,9 @@
 package com.hexaware.cricket.dto;
 
-import com.hexaware.cricket.entity.Player;
-
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 @Data
@@ -16,10 +17,13 @@ public class PlayerDTO {
 	private String playerName;
 	
 	@NotNull(message = "Jersey Number cannot be null")
+	@Min(value = 1, message = "Jersey Number must be at least 1")
+    @Max(value = 99, message = "Jersey Number cannot exceed 99")
 	private int jerseyNumber;
 	
-	@NotNull(message = "Choose the from given role")
-	private Player.Role role;
+	@NotNull(message = "Choose from the given role")
+	@Pattern(regexp = "BATSMAN|BOWLER|ALLROUNDER|WICKETKEEPER", message = "Role must be one of BATSMAN, BOWLER, ALLROUNDER, WICKETKEEPER")
+	private String role;
 	
 	private int totalMatches;
 	
