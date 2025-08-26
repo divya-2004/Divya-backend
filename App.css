@@ -1,0 +1,31 @@
+.app-container {
+  min-height: 100vh;
+  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.6)), url("https://png.pngtree.com/thumb_back/fw800/background/20231017/pngtree-icc-cricket-world-match-background-image_13943187.jpg") no-repeat center center/cover;
+}
+.welcome-text {
+  transition: transform 0.3s, color 0.3s;
+  cursor: pointer;
+}
+
+.welcome-text:hover {
+  color: #ffc107;      
+  transform: scale(1.1); 
+}
+.navbar .nav-link {
+  color: white;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.navbar .nav-link:hover {
+  color: #ffc107 !important; 
+  transform: scale(1.05);     
+}
+
+.navbar .nav-link.active {
+  font-weight: bold;
+  color: #ffc107 !important; 
+}
+
+.navbar .nav-link:hover {
+  cursor: pointer;
+}
